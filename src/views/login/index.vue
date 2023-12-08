@@ -74,10 +74,9 @@ import { lStorage, setToken } from '@/utils'
 import { useStorage } from '@vueuse/core'
 import bgImg from '@/assets/images/login_bg.webp'
 import {login, getRsaParams} from '@/api/main'
-import fetchApi from '@/utils/fetch';
 
 import { useRouter, useRoute } from 'vue-router'
-import { encryptionLogin } from '@/utils/auth/encryption'
+import { encryptionLogin } from '@/utils/encrypt/encryption'
 import { addDynamicRoutes } from '@/router'
 
 const title = import.meta.env.VITE_TITLE
@@ -157,3 +156,4 @@ async function handleLogin() {
   loading.value = false
 }
 </script>
+@/utils/encrypt/encryption
