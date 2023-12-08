@@ -73,7 +73,11 @@
 import { lStorage, setToken } from '@/utils'
 import { useStorage } from '@vueuse/core'
 import bgImg from '@/assets/images/login_bg.webp'
-import api from './api'
+import {login, getRsaParams} from '@/api/main'
+import fetchApi from '@/utils/fetch';
+
+import { useRouter, useRoute } from 'vue-router'
+import { encryptionLogin } from '@/utils/auth/encryption'
 import { addDynamicRoutes } from '@/router'
 
 const title = import.meta.env.VITE_TITLE
@@ -85,6 +89,15 @@ const loginInfo = ref({
   name: '',
   password: '',
 })
+
+let rsaParams = null
+    getRsaParams().then(res => {
+      console.log('getRsaParams', res)
+      rsaParams = res
+      lStorage.set('rsaParams', res)
+    }).catch(err => {
+      console.log('err', err);
+    })
 
 initLoginInfo()
 
@@ -107,11 +120,25 @@ async function handleLogin() {
   try {
     loading.value = true
     $message.loading('正在验证...')
-    const res = await api.login({ name, password: password.toString() })
+    // 密码加密,添加其他条件
+    const authData = { password, captcha: '' }
+    const { modulus, exponent } = lStorage.get('rsaParams')
+
+    const encryptionPassword = encryptionLogin('', modulus, exponent, authData)
+    console.log('encryptionPassword', encryptionPassword)
+    const data = {
+      userID: name,
+      password: encryptionPassword,
+      svrName: '工作平台',
+      keySvrName: 'developmentServerTest121'
+    }
+
+    // const res = await api.login({ name, password: password.toString() })
+    const res = await login(data)
     $message.success('登录成功')
-    setToken(res.data.token)
+    // setToken(res.data.token)
     if (isRemember.value) {
-      lStorage.set('loginInfo', { name, password })
+      lStorage.set('loginInfo', res)
     } else {
       lStorage.remove('loginInfo')
     }

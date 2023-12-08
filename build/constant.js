@@ -7,7 +7,7 @@ export const PROXY_CONFIG = {
    * @转发路径  http://localhost:8080/user
    */
   '/api': {
-    target: 'http://localhost:8080',
+    target: 'http://work.paytunnel.cn:18080/secretassessment',
     changeOrigin: true,
     rewrite: (path) => path.replace(new RegExp('^/api'), ''),
   },
