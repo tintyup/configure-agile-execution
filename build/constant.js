@@ -9,7 +9,16 @@ export const PROXY_CONFIG = {
   '/api': {
     target: 'http://work.paytunnel.cn:18080/secretassessment',
     changeOrigin: true,
+    ws: true,
     rewrite: (path) => path.replace(new RegExp('^/api'), ''),
+    onProxyReq: function (proxyReq, req, res, options) {
+      if (req.body) {
+        let bodyData = qs.stringify(req.body) // incase if content-type is application/x-www-form-urlencoded -> we need to change to application/json
+        proxyReq.setHeader('Content-Type', 'application/x-www-form-urlencoded')
+        proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData)) // stream the content
+        proxyReq.write(bodyData)
+      }
+    },
   },
   /**
    * @desc    不替换匹配值

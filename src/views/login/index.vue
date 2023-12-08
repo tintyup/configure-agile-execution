@@ -70,10 +70,10 @@
 </template>
 
 <script setup>
-import { lStorage, setToken } from '@/utils'
+import { lStorage, sStorage, setToken } from '@/utils'
 import { useStorage } from '@vueuse/core'
 import bgImg from '@/assets/images/login_bg.webp'
-import {login, getRsaParams} from '@/api/main'
+import { login, getRsaParams } from '@/api/main'
 
 import { useRouter, useRoute } from 'vue-router'
 import { encryptionLogin } from '@/utils/encrypt/encryption'
@@ -89,14 +89,10 @@ const loginInfo = ref({
   password: '',
 })
 
-let rsaParams = null
-    getRsaParams().then(res => {
-      console.log('getRsaParams', res)
-      rsaParams = res
-      lStorage.set('rsaParams', res)
-    }).catch(err => {
-      console.log('err', err);
-    })
+getRsaParams().then((res) => {
+  console.log('getRsaParams', res)
+  lStorage.set('rsaParams', res)
+})
 
 initLoginInfo()
 
@@ -129,15 +125,16 @@ async function handleLogin() {
       userID: name,
       password: encryptionPassword,
       svrName: '工作平台',
-      keySvrName: 'developmentServerTest121'
+      keySvrName: 'developmentServerTest121',
     }
 
     // const res = await api.login({ name, password: password.toString() })
     const res = await login(data)
+    sStorage.set('userInfo', res)
     $message.success('登录成功')
-    // setToken(res.data.token)
+    setToken(res.SERVICELOGSSN)
     if (isRemember.value) {
-      lStorage.set('loginInfo', res)
+      lStorage.set('loginInfo', {name, password})
     } else {
       lStorage.remove('loginInfo')
     }

@@ -1,7 +1,8 @@
-import { redefineFetch,interceptors } from './redefineFetch'
+import { redefineFetch, interceptors } from './redefineFetch'
 // 这里是我项目使用到的js-cookie库，主要是为了拿到token，你们这里改成你们获取token的方式即可
-// import Cookies from 'js-cookie'
+import Cookies from 'js-cookie'
 import qs from 'qs' //引入qs模块，用于序列化post请求参数
+import { sStorage, getToken } from '@/utils'
 
 /**
  * config 自定义配置项
@@ -15,36 +16,35 @@ import qs from 'qs' //引入qs模块，用于序列化post请求参数
 let configDefault = {
   showError: true,
   canEmpty: false,
-  returnOrigin: false,
-  withoutCheck: false,
+  returnOrigin: true,
+  withoutCheck: true,
   mock: false,
   timeout: 10000,
+  credentials: 'include',
 }
 
 // 添加请求拦截器
 interceptors.request.use((config) => {
-  // 如果是 post 请求,并且请求的数据是对象格式
-  let config1 = config
-  console.log('config.data', config1)
-    if (config.method === 'POST' && config.body) {
-      // 设置请求头 发送的数据是x-www-form-urlencoded 格式
-      config.headers['Content-Type'] = 'application/x-www-form-urlencoded'
-    }
-
   // 这里是我项目使用到的js-cookie库，主要是为了拿到token，你们这里改成你们获取token的方式即可
-  // const token = Cookies.get('access_token')
-  const token = 'token_1'
+  const token = Cookies.get('access_token')
+  // const token = getToken()
+  console.log(token)
   configDefault = Object.assign(
     {
       responseType: 'json',
       headers: {
         'Content-Type': 'application/json;charset=utf-8',
-        authorization: `Bearer ${token}`,
+        // authorization: `Bearer ${token}`,
       },
     },
     configDefault,
     config
   )
+  // 如果是 post 请求,并且请求的数据是对象格式
+  if (configDefault.method === 'POST' && configDefault.body) {
+    // 设置请求头 发送的数据是x-www-form-urlencoded 格式
+    configDefault.headers['Content-Type'] = 'application/x-www-form-urlencoded'
+  }
   console.log('添加请求拦截器 configDefalut ==>', configDefault)
   return configDefault
 })
@@ -92,6 +92,18 @@ async function resultReduction(response) {
 }
 
 function request(method, path, data, config) {
+  if ((method === 'POST' && path === '/main') || path === '/getMenuGrp') {
+    let name = sStorage.get('userInfo').SYSTEMKEYNAME
+    let key = sStorage.get('userInfo').SYSTEMTELLERNO
+    if (!data) {
+      data = {}
+    }
+    if (name && key) {
+      data.SYSTEMKEYNAME = name
+      data.SYSTEMTELLERNO = key
+    }
+    console.log('data', data)
+  }
   let myInit = {
     method,
     ...configDefault,

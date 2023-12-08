@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router'
 import { setupRouterGuard } from './guard'
 import { basicRoutes, EMPTY_ROUTE, NOT_FOUND_ROUTE } from './routes'
-import { getToken, isNullOrWhitespace } from '@/utils'
+import { sStorage, getToken, isNullOrWhitespace } from '@/utils'
 import { useUserStore, usePermissionStore } from '@/store'
 
 const isHash = import.meta.env.VITE_USE_HASH === 'true'
@@ -48,26 +48,12 @@ export async function addDynamicRoutes() {
     })
     router.hasRoute(EMPTY_ROUTE.name) && router.removeRoute(EMPTY_ROUTE.name)
     router.addRoute(NOT_FOUND_ROUTE)
-
+    console.log('userStore', sStorage.get('userInfo'))
     window.$notification?.success({
-      title: '🎉🎉🎉 2.0 全栈版本开放体验了！',
-      content: () =>
-        h(
-          'span',
-          {},
-          '2.0为全栈版本，提供前端+后端，全新重构，全面简化，',
-          h(
-            'a',
-            { href: 'https://admin.isme.top', target: '__blank' },
-            '👉https://admin.isme.top。'
-          ),
-          h('p', {}, '体验账号: admin / 123456'),
-          h(
-            'p',
-            {},
-            '目前火速完善文档中，即将开源，点亮 `star` 和 `watch` 或者加群可获取最新开源通知！'
-          )
-        ),
+      title: '登录成功！',
+      content: () => h('span', {}, `欢迎回来，${sStorage.get('userInfo').name}`),
+      duration: 2500,
+      keepAliveOnHover: true,
     })
   } catch (error) {
     console.error(error)
