@@ -18,7 +18,7 @@ let configDefault = {
   canEmpty: false,
   returnOrigin: true,
   withoutCheck: true,
-  mock: false,
+  mock: true,
   timeout: 10000,
   credentials: 'include',
 }
@@ -92,17 +92,19 @@ async function resultReduction(response) {
 }
 
 function request(method, path, data, config) {
-  if ((method === 'POST' && path === '/main') || path === '/getMenuGrp') {
+  const defaultNeedRequest = ['/main', '/getMenuGrp']
+  if (method === 'POST' && defaultNeedRequest.includes(path)) {
     let name = sStorage.get('userInfo').SYSTEMKEYNAME
     let key = sStorage.get('userInfo').SYSTEMTELLERNO
-    if (!data) {
-      data = {}
-    }
+    if (!data) data = {}
     if (name && key) {
-      data.SYSTEMKEYNAME = name
-      data.SYSTEMTELLERNO = key
+      data = {
+        SYSTEMTELLERNO: sStorage.get('userInfo').SYSTEMTELLERNO,
+        SYSTEMKEYNAME: sStorage.get('userInfo').SYSTEMKEYNAME,
+        ...data,
+      }
     }
-    console.log('data', data)
+    console.log('defaultNeedRequest', data)
   }
   let myInit = {
     method,

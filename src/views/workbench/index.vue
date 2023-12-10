@@ -82,7 +82,8 @@ import { UniversalTransition } from 'echarts/features'
 import { CanvasRenderer } from 'echarts/renderers'
 import VChart from 'vue-echarts'
 
-import { getMenuGrp,main } from '@/api/main'
+import api from '@/api'
+import { viewDef, secondaryMenuPage } from '@/utils/baseParams'
 
 const userStore = useUserStore()
 
@@ -200,17 +201,18 @@ const skillsOption = {
     },
   ],
 }
-fetch("http://work.paytunnel.cn:18080/secretassessment/getMenuGrp?SYSTEMKEYNAME=developmentServerTest121&SYSTEMTELLERNO=lwl", {
-  method: 'POST',
-}).then(response => response.text())
-  .then(result => console.log(result))
-  .catch(error => console.log('error', error));
-getMenuGrp().then((res) => {
-  console.log('getMenuGrp()',res)
-})
-main({
-  operationID: 9990,
+
+api.main({
+  ...secondaryMenuPage.base,
+  ...secondaryMenuPage.vars,
 }).then((res) => {
-  console.log('main 9990',res)
+  console.log('main 1',res)
+})
+api.main({
+  ...viewDef.base,
+  ...viewDef.vars,
+}).then((res) => {
+  console.log('main 2',res)
 })
 </script>
+@/utils/baseParams

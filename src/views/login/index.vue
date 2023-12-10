@@ -73,7 +73,8 @@
 import { lStorage, sStorage, setToken } from '@/utils'
 import { useStorage } from '@vueuse/core'
 import bgImg from '@/assets/images/login_bg.webp'
-import { login, getRsaParams } from '@/api/main'
+// import { login, getRsaParams } from '@/api/main'
+import api from '@/api'
 
 import { useRouter, useRoute } from 'vue-router'
 import { encryptionLogin } from '@/utils/encrypt/encryption'
@@ -89,7 +90,7 @@ const loginInfo = ref({
   password: '',
 })
 
-getRsaParams().then((res) => {
+api.getRsaParams().then((res) => {
   console.log('getRsaParams', res)
   lStorage.set('rsaParams', res)
 })
@@ -129,7 +130,7 @@ async function handleLogin() {
     }
 
     // const res = await api.login({ name, password: password.toString() })
-    const res = await login(data)
+    const res = await api.login(data)
     sStorage.set('userInfo', res)
     $message.success('登录成功')
     setToken(res.SERVICELOGSSN)

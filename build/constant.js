@@ -6,11 +6,11 @@ export const PROXY_CONFIG = {
    * @请求路径  http://localhost:3100/api/user
    * @转发路径  http://localhost:8080/user
    */
-  '/api': {
+  '/secretassessment/api': {
     target: 'http://work.paytunnel.cn:18080/secretassessment',
     changeOrigin: true,
     ws: true,
-    rewrite: (path) => path.replace(new RegExp('^/api'), ''),
+    rewrite: (path) => path.replace(new RegExp('^/secretassessment/api'), ''),
     onProxyReq: function (proxyReq, req, res, options) {
       if (req.body) {
         let bodyData = qs.stringify(req.body) // incase if content-type is application/x-www-form-urlencoded -> we need to change to application/json
