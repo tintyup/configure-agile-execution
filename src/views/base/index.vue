@@ -1,3 +1,50 @@
+<script setup>
+import api from '@/api'
+import { myTasks } from '@/utils/baseParams'
+
+api.main({
+  ...myTasks.base,
+  ...myTasks.vars,
+}).then((res) => {
+  console.log('我的任务 main', res)
+})
+
+const handleDelete = function () {
+  $dialog.confirm({
+    content: '确认删除？',
+    confirm() {
+      $message.success('删除成功')
+    },
+    cancel() {
+      $message.warning('已取消')
+    },
+  })
+}
+
+const loading = ref(false)
+function handleLogin() {
+  loading.value = true
+  $message.loading('登陆中...')
+  setTimeout(() => {
+    $message.error('登陆失败')
+    $message.loading('正在尝试重新登陆...')
+    setTimeout(() => {
+      $message.success('登陆成功')
+      loading.value = false
+    }, 2000)
+  }, 2000)
+}
+
+function notify(type) {
+  $notification[type]({
+    content: '说点啥呢',
+    meta: '想不出来',
+    duration: 2500,
+    keepAliveOnHover: true,
+  })
+}
+</script>
+
 <template>
   <CommonPage show-footer>
     <n-space size="large">
@@ -62,39 +109,4 @@
   </CommonPage>
 </template>
 
-<script setup>
-const handleDelete = function () {
-  $dialog.confirm({
-    content: '确认删除？',
-    confirm() {
-      $message.success('删除成功')
-    },
-    cancel() {
-      $message.warning('已取消')
-    },
-  })
-}
 
-const loading = ref(false)
-function handleLogin() {
-  loading.value = true
-  $message.loading('登陆中...')
-  setTimeout(() => {
-    $message.error('登陆失败')
-    $message.loading('正在尝试重新登陆...')
-    setTimeout(() => {
-      $message.success('登陆成功')
-      loading.value = false
-    }, 2000)
-  }, 2000)
-}
-
-function notify(type) {
-  $notification[type]({
-    content: '说点啥呢',
-    meta: '想不出来',
-    duration: 2500,
-    keepAliveOnHover: true,
-  })
-}
-</script>

@@ -208,11 +208,4 @@ api.main({
 }).then((res) => {
   console.log('main 1',res)
 })
-api.main({
-  ...viewDef.base,
-  ...viewDef.vars,
-}).then((res) => {
-  console.log('main 2',res)
-})
 </script>
-@/utils/baseParams

@@ -9,13 +9,27 @@ const viewDef = {
     showStyle: 0,
     isOperatorSingleRec: 0,
     level: 1,
-    condition: 'mainMenuName = Splenwise软件开发管理平台主菜单, viewName=我的任务',
+    condition: 'mainMenuName=Splenwise软件开发管理平台主菜单,viewName=我的任务',
     rel: '编辑本视图',
     btnShowStyle: 0,
     EDITALAIS: 'viewDef',
     curTblAlias: '我的任务',
   },
   vars: {}
+}
+
+// 我的任务
+const myTasks = {
+  base: {
+    resId: 294,
+    tblAlias: 'viewDef',
+    operationID: 51,
+    condition: 'where::submitter = @.active.tellerName@ and exeStatus not in (4,5,8)',
+    rel: '我的任务',
+    btnShowStyle: 0,
+    curTblAlias: 'viewDef',
+  },
+  vars: {},
 }
 
 // 二级菜单界面
@@ -32,7 +46,9 @@ const secondaryMenuPage = {
   vars: {}
 }
 
-export  {
+export {
   viewDef,
-  secondaryMenuPage,
+  myTasks,
+  secondaryMenuPage
 }
+

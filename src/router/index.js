@@ -30,7 +30,6 @@ export async function resetRouter() {
 export async function addDynamicRoutes() {
   // return Promise.reject('123')
   const token = getToken()
-
   // 没有token情况
   if (isNullOrWhitespace(token)) {
     router.addRoute(EMPTY_ROUTE)

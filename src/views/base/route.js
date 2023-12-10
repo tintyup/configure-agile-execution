@@ -12,12 +12,22 @@ export default {
   },
   children: [
     {
-      name: 'BaseComponents',
+      name: 'myTasksBaseComponents',
       path: 'index',
       component: () => import('./index.vue'),
       meta: {
-        title: '基础组件',
+        title: '我的任务',
         icon: 'material-symbols:auto-awesome-outline-rounded',
+      },
+    },
+    {
+      name: 'viewDef',
+      path: 'view-def',
+      component: () => import('./view-def/index.vue'),
+      meta: {
+        title: '编辑本视图',
+        icon: 'material-symbols:auto-awesome-outline-rounded',
+        keepAlive: true,
       },
     },
     {
